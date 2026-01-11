@@ -1,8 +1,10 @@
 import sys
 
 with open(sys.argv[1], "r") as f:
-    grid = f.read().strip().split("\n")
+    lines = f.read().strip().split("\n")
 
+
+grid = [list(line) for line in lines]
 rows = len(grid)
 cols = len(grid[0])
 max_occupied_neighbors = 3
@@ -23,14 +25,35 @@ def get_occupied_neighbors(r,l):
 
     return occ
 
-for row in range(rows):
-    for col in range(cols):
-        if(grid[row][col] == "@"):
-            occ_nei = get_occupied_neighbors(row,col)
-            if(len(occ_nei) <= max_occupied_neighbors):
-                accessible_grid_count += 1
-            
-               
+def remove_accessible():
+    removed = 0
+    for row in range(rows):
+        for col in range(cols):
+            if(grid[row][col] == "@"):
+                occ_nei = get_occupied_neighbors(row,col)
+                if(len(occ_nei) <= max_occupied_neighbors):
+                    removed += 1
+                    grid[row][col] = "."    
+    return removed
 
+######## for Part 1 #########
+# for row in range(rows):
+#     for col in range(cols):
+#         if(grid[row][col] == "@"):
+#             occ_nei = get_occupied_neighbors(row,col)
+#             if(len(occ_nei) <= max_occupied_neighbors):
+#                 accessible_grid_count += 1
+##############################    
 
-print(f"Accessible psoitions count = {accessible_grid_count}")
+total_removed = 0      
+while(True):
+    removed = remove_accessible()
+    if(removed > 0):
+        total_removed += removed
+    else:
+        break           
+
+############# for Part 1 #############################
+#print(f"Accessible psoitions count = {accessible_grid_count}")
+
+print(f"Total removed rolls = {total_removed}")
